@@ -15,6 +15,8 @@ import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import SmartImage from "components/SmartImage";
+
 // Redux store components
 import { getArticles, postArticle } from "state/articles/actions";
 import { parseExcerpt, parseExcerptImage } from "state/articles/selectors";
@@ -22,6 +24,7 @@ import { parseExcerpt, parseExcerptImage } from "state/articles/selectors";
 import styles from "assets/jss/material-kit-react/views/landingPageSections/teamStyle.js";
 
 const useStyles = makeStyles(styles);
+
 
 const ArticleCard = ({ imageClasses, classes, article }) => {
   const { excerpt } = article;
@@ -32,7 +35,7 @@ const ArticleCard = ({ imageClasses, classes, article }) => {
     <Card plain>
       <Link to={`e/${article.slug}`}>
         <GridItem xs={12} sm={12} md={6} className={classes.itemGrid}>
-          <img src={excerptImage} alt="..." className={imageClasses} />
+          <SmartImage excerptImage={excerptImage} width="150" />
         </GridItem>
         <h4 className={classes.cardTitle}>{article.title}</h4>
         <CardBody>
@@ -72,7 +75,13 @@ function ArticlesSection({ articles, getArticlesDispatch }) {
       <GridContainer>
         {articles.map((article, i) => {
           return (
-            <GridItem xs={12} sm={4} md={4} key={article.id} className={classes.flex}>
+            <GridItem
+              xs={12}
+              sm={4}
+              md={4}
+              key={article.id}
+              className={classes.flex}
+            >
               <ArticleCard
                 article={article}
                 imageClasses={imageClasses}

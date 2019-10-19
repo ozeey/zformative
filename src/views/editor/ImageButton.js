@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React from "react";
 import { ImageSideButton, Block, addNewBlock } from "medium-draft";
 import "isomorphic-fetch";

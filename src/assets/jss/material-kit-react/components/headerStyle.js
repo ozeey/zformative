@@ -61,7 +61,6 @@ const headerStyle = {
     padding: "8px 16px",
     letterSpacing: "5px",
     fontWeight: "bold",
-    color: "wheat",
     "&:hover,&:focus": {
       color: "inherit",
       background: "transparent"

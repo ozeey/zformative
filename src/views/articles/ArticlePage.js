@@ -70,9 +70,7 @@ function ArticlePage({
   }, [slug, getArticleDispatch]);
 
   useEffect(() => {
-    setEditedPost(
-      article && slug === article.slug ? { ...article } : initialPost
-    );
+    setEditedPost(article);
   }, [article]);
 
   const onChangeTitle = title => {
@@ -97,8 +95,8 @@ function ArticlePage({
     postArticleDispatch({ restType, data: editedPost });
     // make it callback of postArticleDispatch
 
-    if (slug !== editedPost.slug) {      
-      history.push( editedPost.id ? editedPost.slug :`e/${editedPost.slug}`);
+    if (slug !== editedPost.slug) {
+      history.push(editedPost.id ? editedPost.slug : `e/${editedPost.slug}`);
     }
   };
 
@@ -163,11 +161,7 @@ function ArticlePage({
             />
           </div>
           <GridContainer justify="center">
-            <Button
-              color="primary"
-              size="lg" 
-              onClick={saveIt}
-            >
+            <Button color="primary" size="lg" onClick={saveIt}>
               {"Save It"}
             </Button>
           </GridContainer>
