@@ -12,7 +12,6 @@ export const parseExcerpt = json => {
 
 export const parseExcerptImage = json => {
   const jsonObj = getParseJsonString(json);
-  console.log(jsonObj);
   if (jsonObj) {
     const image = jsonObj.blocks.find(x => x.type === "atomic:image");
 

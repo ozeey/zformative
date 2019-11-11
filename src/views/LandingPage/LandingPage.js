@@ -26,16 +26,15 @@ import ArticlesSection from "./Sections/ArticlesSection";
 // store connection
 import { connect } from "react-redux";
 import { getCSRF } from "state/csrf/actions";
-// import withMessages from "views/loader";
+import { parseExcerpt, parseExcerptImage } from "state/articles/selectors";
 
 const dashboardRoutes = [];
 
 const useStyles = makeStyles(styles);
 
 function LandingPage(props) {
-
   // useEffect(() => {
-   // props.getCSRFDispatch();
+  // props.getCSRFDispatch();
   // },[]);
 
   // const fetchArticles = () => {
@@ -54,7 +53,12 @@ function LandingPage(props) {
   // };
 
   const classes = useStyles();
-  const { ...rest } = props;
+  const { articles, ...rest } = props;
+  const first = articles && articles.length > 0 ? articles[0] : null;
+
+  const { excerpt } = first;
+  const excerptJson = parseExcerpt(excerpt);
+  const excerptImage = parseExcerptImage(excerpt);
 
   return (
     <div>
@@ -70,32 +74,27 @@ function LandingPage(props) {
         }}
         {...rest}
       />
-      <Parallax filter image={require("assets/img/landing-bg.jpg")}>
-        <div className={classes.container}>
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={6}>
-              <h1 className={classes.title}>Your Story Starts With Us.</h1>
-              <h4>
-                Every landing page needs a small description after the big bold
-                title, that{"'"}s why we added this text here. Add here all the
-                information that can make you or your product create the first
-                impression.
-              </h4>
-              <br />
-              <Button
-                color="danger"
-                size="lg"
-                href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ref=creativetim"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i className="fas fa-play" />
-                Watch video
-              </Button>
-            </GridItem>
-          </GridContainer>
-        </div>
-      </Parallax>
+      {first && (
+        <Parallax filter image={ excerptImage ? excerptImage : require("assets/img/landing-bg.jpg")}>
+          <div className={classes.container}>
+            <GridContainer>
+              <GridItem xs={12} sm={12} md={6}>
+                <h1 className={classes.title}>{first.title}</h1>
+                <h4>{excerptJson}</h4>
+                <br />
+                <Button
+                  color="danger"
+                  size="lg"
+                  href={`e/${first.slug}`}
+                  rel="noopener noreferrer"
+                >
+                  Read more
+                </Button>
+              </GridItem>
+            </GridContainer>
+          </div>
+        </Parallax>
+      )}
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classes.container}>
           {/* <ProductSection /> */}
@@ -108,9 +107,15 @@ function LandingPage(props) {
   );
 }
 
-const mapStateToProps = ({ root: { csrf: { csrf } } = [] }) => {
+const mapStateToProps = ({
+  root: {
+    csrf: { csrf },
+    articles: { articles, error, isLoading } = []
+  }
+}) => {
   return {
-    csrf
+    csrf,
+    articles
   };
 };
 

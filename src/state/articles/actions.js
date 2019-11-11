@@ -57,3 +57,22 @@ export const postArticleFailure = (message) => ({
     payload: message
 });
 
+// @DELETE
+export const DELETE_ARTICLE = 'DELETE_ARTICLE';
+export const DELETE_ARTICLE_SUCCESS = 'DELETE_ARTICLE_SUCCESS';
+export const DELETE_ARTICLE_FAILURE = 'DELETE_ARTICLE_FAILURE';
+
+export const deleteArticle = (data) => ({
+    type: DELETE_ARTICLE,
+    payload: data
+});
+
+export const deleteArticleSuccess = (article) => ({
+    type: DELETE_ARTICLE_SUCCESS,
+    payload: article
+});
+
+export const deleteArticleFailure = (message) => ({
+    type: DELETE_ARTICLE_FAILURE,
+    payload: message
+});

@@ -28,11 +28,13 @@ export function buildResourceUri(network, resource, idOrSlug = null , params = {
 export default class restClient {
   static call({data, network, resource, action, restType, ...restProp}) {
     const uri = buildResourceUri(network, resource, data.id)
-    
+
     if(restType === 'post')
       return from(network.post(uri, data))
     else if(restType === 'put')
       return from(network.put(uri, data))
+    else if(restType === 'delete')
+      return from(network.delete(uri, data))
 
   }
 }

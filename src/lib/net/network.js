@@ -52,6 +52,10 @@ export default class Network {
     return axios.put(url, data, { crossDomain: !isDev, withCredentials: !isDev })
   }
 
+  delete(url, data) {
+    return axios.delete(url, data, { crossDomain: !isDev, withCredentials: !isDev })
+  }
+
   get(url) {
     return axios.get(url, { crossDomain: !isDev, withCredentials: !isDev })
   }
@@ -87,7 +91,6 @@ export default class Network {
   secureAxios(url, data) {
     this.parseSecureToken()
     const headers = this.getHeaders()
-    console.log("headers",headers)
     return axios.post(url, data, headers)
   }
   // Standard secured AJAX call

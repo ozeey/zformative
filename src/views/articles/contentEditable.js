@@ -1,14 +1,12 @@
-import React from 'react';
+import React from "react";
 
 function contentEditable(WrappedComponent) {
-
   return class extends React.Component {
-
     state = {
       editing: false
-    }
+    };
 
-    toggleEdit = (e) => {
+    toggleEdit = e => {
       e.stopPropagation();
       if (this.state.editing) {
         this.cancel();
@@ -18,21 +16,27 @@ function contentEditable(WrappedComponent) {
     };
 
     edit = () => {
-      this.setState({
-        editing: true
-      }, () => {
-        this.domElm.focus();
-      });
+      this.setState(
+        {
+          editing: true
+        },
+        () => {
+          this.domElm.focus();
+        }
+      );
     };
 
     save = () => {
-      this.setState({
-        editing: false
-      }, () => {
-        if (this.props.onSave && this.isValueChanged()) {
-          this.props.onSave(this.domElm.textContent)
+      this.setState(
+        {
+          editing: false
+        },
+        () => {
+          if (this.props.onSave && this.isValueChanged()) {
+            this.props.onSave(this.domElm.textContent);
+          }
         }
-      });
+      );
     };
 
     cancel = () => {
@@ -42,14 +46,14 @@ function contentEditable(WrappedComponent) {
     };
 
     isValueChanged = () => {
-      return this.props.value !== this.domElm.textContent
+      return this.props.value !== this.domElm.textContent;
     };
 
-    handleKeyDown = (e) => {
+    handleKeyDown = e => {
       const { key } = e;
       switch (key) {
-        case 'Enter':
-        case 'Escape':
+        case "Enter":
+        case "Escape":
           this.save();
           break;
         default:
@@ -58,31 +62,30 @@ function contentEditable(WrappedComponent) {
     };
 
     render() {
-      // console.log(this.props)
       let editOnClick = true;
-      const {editing} = this.state;
+      const { editing } = this.state;
       if (this.props.editOnClick !== undefined) {
         editOnClick = this.props.editOnClick;
       }
       return (
         <WrappedComponent
-          className={editing ? 'editing' : ''}
+          className={editing ? "editing" : ""}
           onClick={editOnClick ? this.toggleEdit : undefined}
           contentEditable={editing}
-          ref={(domNode) => {
+          ref={domNode => {
             this.domElm = domNode;
           }}
           onBlur={this.save}
           onKeyDown={this.handleKeyDown}
           suppressContentEditableWarning={true}
           placeholder="Write your title"
-          style={{width: '100%'}}
+          style={{ width: "100%" }}
         >
-        {this.props.value}
-      </WrappedComponent>
-      )
+          {this.props.value}
+        </WrappedComponent>
+      );
     }
-  }
+  };
 }
 
 export default contentEditable;

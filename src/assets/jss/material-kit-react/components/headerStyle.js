@@ -17,7 +17,7 @@ const headerStyle = {
     display: "flex",
     border: "0",
     borderRadius: "3px",
-    padding: "0.625rem 0",
+    // padding: "0.625rem 0",
     marginBottom: "20px",
     color: "#555",
     width: "100%",
@@ -49,7 +49,7 @@ const headerStyle = {
     flexWrap: "nowrap"
   },
   flex: {
-    flex: 1
+    flex: 2
   },
   title: {
     ...defaultFont,
@@ -57,14 +57,16 @@ const headerStyle = {
     fontSize: "xx-large",
     borderRadius: "3px",
     textTransform: "none",
+    border: '1px solid red',
     color: "inherit",
-    padding: "8px 16px",
+    // padding: "8px 16px",
     letterSpacing: "5px",
     fontWeight: "bold",
     "&:hover,&:focus": {
       color: "inherit",
       background: "transparent"
     }
+    
   },
   appResponsive: {
     margin: "20px 10px"
@@ -108,7 +110,7 @@ const headerStyle = {
   transparent: {
     backgroundColor: "transparent !important",
     boxShadow: "none",
-    paddingTop: "25px",
+    // paddingTop: "15px",
     color: "#FFFFFF"
   },
   dark: {
@@ -119,7 +121,7 @@ const headerStyle = {
   },
   white: {
     border: "0",
-    padding: "0.625rem 0",
+    // padding: "0.625rem 0",
     marginBottom: "20px",
     color: "#555",
     backgroundColor: "#fff !important",

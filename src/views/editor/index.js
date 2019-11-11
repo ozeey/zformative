@@ -2,9 +2,14 @@ import React, { Component } from "react";
 import "medium-draft/lib/index.css";
 import { Editor, createEditorState } from "medium-draft";
 import { convertToRaw } from "draft-js";
-import { getDefaultKeyBinding, KeyBindingUtil, EditorState, AtomicBlockUtils } from "draft-js";
+import {
+  getDefaultKeyBinding,
+  KeyBindingUtil,
+  EditorState,
+  AtomicBlockUtils
+} from "draft-js";
 
-import ImageButton from './ImageButton'
+import ImageButton from "./ImageButton";
 
 const { hasCommandModifier } = KeyBindingUtil;
 
@@ -17,15 +22,19 @@ class SeparatorSideButton extends React.Component {
   onClick() {
     let editorState = this.props.getEditorState();
     const content = editorState.getCurrentContent();
-    const contentWithEntity = content.createEntity('separator', 'IMMUTABLE', {});
+    const contentWithEntity = content.createEntity(
+      "separator",
+      "IMMUTABLE",
+      {}
+    );
     const entityKey = contentWithEntity.getLastCreatedEntityKey();
-    editorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
+    editorState = EditorState.push(
+      editorState,
+      contentWithEntity,
+      "create-entity"
+    );
     this.props.setEditorState(
-      AtomicBlockUtils.insertAtomicBlock(
-        editorState,
-        entityKey,
-        '-'
-      )
+      AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, "-")
     );
     this.props.close();
   }
@@ -47,18 +56,20 @@ class SeparatorSideButton extends React.Component {
 class AddEditor extends Component {
   constructor(props) {
     super(props);
-    
-    this.sideButtons = [{
-      title: 'Image',
-      component: ImageButton,
-    },
-    {
-      title: 'Separator',
-      component: SeparatorSideButton,
-    }];
+
+    this.sideButtons = [
+      {
+        title: "Image",
+        component: ImageButton
+      },
+      {
+        title: "Separator",
+        component: SeparatorSideButton
+      }
+    ];
 
     this.state = {
-      editorState: createEditorState(this.parseIt(props.editorState)),
+      editorState: createEditorState(this.parseIt(props.editorState))
     };
 
     this.onChange = editorState => {
@@ -71,7 +82,7 @@ class AddEditor extends Component {
 
   myKeyBindingFn = e => {
     if (e.keyCode === 83 /* `S` key */ && hasCommandModifier(e)) {
-      this.saveIt()
+      this.saveIt();
       return "myeditor-save";
     }
     return getDefaultKeyBinding(e);
@@ -80,18 +91,17 @@ class AddEditor extends Component {
   handleKeyCommand = command => {
     if (command === "myeditor-save") {
       // Perform a request to save your contents, set
-      // a new `editorState`, etc.      
+      // a new `editorState`, etc.
       return "handled";
     }
     return "not-handled";
-  }
+  };
 
   componentDidMount() {
     this.refsEditor.current.focus();
   }
 
   parseIt(data) {
-    console.log(data)
     return JSON.parse(data);
   }
 

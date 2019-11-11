@@ -11,10 +11,8 @@ import { Link } from "react-router-dom";
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
 import SmartImage from "components/SmartImage";
 
 // Redux store components
@@ -35,25 +33,13 @@ const ArticleCard = ({ imageClasses, classes, article }) => {
     <Card plain>
       <Link to={`e/${article.slug}`}>
         <GridItem xs={12} sm={12} md={6} className={classes.itemGrid}>
-          <SmartImage excerptImage={excerptImage} width="150" />
+          <SmartImage src={excerptImage} width="150" />
         </GridItem>
         <h4 className={classes.cardTitle}>{article.title}</h4>
         <CardBody>
           <p className={classes.description}>{excerptJson}</p>
         </CardBody>
       </Link>
-
-      <CardFooter className={classes.justifyCenter}>
-        <Button justIcon color="transparent" className={classes.margin5}>
-          <i className={classes.socials + " fa fa-twitter"} />
-        </Button>
-        <Button justIcon color="transparent" className={classes.margin5}>
-          <i className={classes.socials + " fa fa-instagram"} />
-        </Button>
-        <Button justIcon color="transparent" className={classes.margin5}>
-          <i className={classes.socials + " fa fa-facebook"} />
-        </Button>
-      </CardFooter>
     </Card>
   );
 };
@@ -107,7 +93,7 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    getArticlesDispatch: payload => dispatch(getArticles()),
+    getArticlesDispatch: () => dispatch(getArticles()),
     postArticleDispatch: payload => dispatch(postArticle(payload))
   };
 };

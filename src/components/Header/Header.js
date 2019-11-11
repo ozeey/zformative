@@ -17,12 +17,17 @@ import Drawer from "@material-ui/core/Drawer";
 import Menu from "@material-ui/icons/Menu";
 // core components
 import styles from "assets/jss/material-kit-react/components/headerStyle.js";
+import SmartImage from "components/SmartImage";
+import logo from "assets/img/logo.png";
+import logoWhite from "assets/img/logo-white.png";
 
 const useStyles = makeStyles(styles);
 
 export default function Header(props) {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [logoSrc, setLogoSrc] = React.useState(logoWhite);
+
   React.useEffect(() => {
     if (props.changeColorOnScroll) {
       window.addEventListener("scroll", headerColorChange);
@@ -38,6 +43,8 @@ export default function Header(props) {
   };
   const headerColorChange = () => {
     const { color, changeColorOnScroll } = props;
+   
+
     const windowsScrollTop = window.pageYOffset;
     if (windowsScrollTop > changeColorOnScroll.height) {
       document.body
@@ -46,7 +53,9 @@ export default function Header(props) {
       document.body
         .getElementsByTagName("header")[0]
         .classList.add(classes[changeColorOnScroll.color]);
+      setLogoSrc(logo)
     } else {
+      setLogoSrc(logoWhite)
       document.body
         .getElementsByTagName("header")[0]
         .classList.add(classes[color]);
@@ -64,7 +73,11 @@ export default function Header(props) {
   });
   const brandComponent = (
     <Link to="/">
-      <Button className={classes.title}>{brand}</Button>
+      {!logoSrc ? (
+        <Button className={classes.title}>{brand}</Button>
+      ) : (
+        <SmartImage src={logoSrc} width="100" />
+      )}
     </Link>
   );
 

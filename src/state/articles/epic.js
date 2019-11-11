@@ -12,7 +12,11 @@ import {
 
     GET_ARTICLE,
     getArticleSuccess,
-    getArticleFailure
+    getArticleFailure,
+
+    DELETE_ARTICLE,
+    deleteArticleSuccess,
+    deleteArticleFailure,
 } from "./actions"
 
 import restClient from './../../lib/net/restClient'
@@ -63,4 +67,21 @@ function postArticleEpic(action$, state$, { network }){
       .catch(error => Observable.of(postArticleFailure(error.message)))
 }
 
-export default combineEpics(getArticlesEpic, postArticleEpic, getArticleEpic)
+function deleteArticleEpic(action$, state$, { network }){
+    return action$
+      .ofType(DELETE_ARTICLE) 
+      .switchMap((action) => {
+        
+        // action contains data and action properties
+        const params = {
+            ...action.payload,
+            resource, network,
+            restType: 'delete'
+        }
+        return restClient.call(params)
+      })
+      .map(article => deleteArticleSuccess(article)) 
+      .catch(error => Observable.of(deleteArticleFailure(error.message)))
+}
+
+export default combineEpics(getArticlesEpic, postArticleEpic, getArticleEpic, deleteArticleEpic)

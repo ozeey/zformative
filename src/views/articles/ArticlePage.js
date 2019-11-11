@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
-// nodejs library that concatenates classes
-import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -10,7 +8,7 @@ import Button from "components/CustomButtons/Button.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 // Redux components
-import { getArticle, postArticle } from "state/articles/actions";
+import { getArticle, postArticle, deleteArticle } from "state/articles/actions";
 import { createSlug } from "lib/helpers/Helpers";
 
 // local components
@@ -20,8 +18,6 @@ import ArticleContainer from "views/containers/ArticleContainer";
 import AddEditor from "../editor/index";
 import withMessages from "../loader";
 
-import profile from "assets/img/faces/christian.jpg";
-
 import styles from "assets/jss/material-kit-react/views/profilePage.js";
 
 const useStyles = makeStyles(styles);
@@ -30,7 +26,9 @@ function ArticlePage({
   article,
   getArticleDispatch,
   postArticleDispatch,
+  deleteArticleDispatch,
   history,
+  isDeleted,
   ...rest
 }) {
   var initialPost = {
@@ -53,12 +51,6 @@ function ArticlePage({
 
   const classes = useStyles();
 
-  const imageClasses = classNames(
-    classes.imgRaised,
-    classes.imgRoundedCircle,
-    classes.imgFluid
-  );
-
   const {
     match: {
       params: { slug }
@@ -72,6 +64,10 @@ function ArticlePage({
   useEffect(() => {
     setEditedPost(article);
   }, [article]);
+
+  useEffect(() => {
+    if (isDeleted === true) history.push("/");
+  }, [isDeleted, history]);
 
   const onChangeTitle = title => {
     setEditedPost({ ...editedPost, title, slug: createSlug(title) });
@@ -94,17 +90,33 @@ function ArticlePage({
 
     postArticleDispatch({ restType, data: editedPost });
     // make it callback of postArticleDispatch
-
     if (slug !== editedPost.slug) {
       history.push(editedPost.id ? editedPost.slug : `e/${editedPost.slug}`);
     }
   };
 
+  const toggleStatus = f => {
+    setEditedPost({
+      ...editedPost,
+      status: editedPost.status === "active" ? "inactive" : "active"
+    });
+  };
+
+  const togglePublish = f => {
+    setEditedPost({
+      ...editedPost,
+      published_at: editedPost.published_at ? null : "published"
+    });
+  };
+
   const getEditorState = field => {
-    console.log("field", editedPost);
     return editedPost && editedPost[field] !== undefined
       ? editedPost[field]
       : null;
+  };
+
+  const removeArticle = () => {
+    deleteArticleDispatch({ data: editedPost });
   };
 
   const Editor = withMessages(AddEditor);
@@ -117,28 +129,12 @@ function ArticlePage({
       {editedPost && (
         <div className={classes.container}>
           <GridContainer justify="center">
-            <GridItem xs={12} sm={12} md={12}>
-              <div className={classes.profile}>
-                <div>
-                  <img src={profile} alt="..." className={imageClasses} />
-                </div>
-                <div className={classes.name}>
-                  <EditableH3
-                    className={classes.title}
-                    value={editedPost.title}
-                    onSave={val => onChangeTitle(val)}
-                  />
-                  <Button justIcon link className={classes.margin5}>
-                    <i className={"fa fa-twitter"} />
-                  </Button>
-                  <Button justIcon link className={classes.margin5}>
-                    <i className={"fa fa-instagram"} />
-                  </Button>
-                  <Button justIcon link className={classes.margin5}>
-                    <i className={"fa fa-facebook"} />
-                  </Button>
-                </div>
-              </div>
+            <GridItem xs={12} sm={12} md={12} className={classes.title}>
+              <EditableH3
+                className={classes.title}
+                value={editedPost.title}
+                onSave={val => onChangeTitle(val)}
+              />
             </GridItem>
           </GridContainer>
           <div className={classes.description}>
@@ -162,7 +158,31 @@ function ArticlePage({
           </div>
           <GridContainer justify="center">
             <Button color="primary" size="lg" onClick={saveIt}>
-              {"Save It"}
+              {"Save"}
+            </Button>
+            <Button
+              color="primary"
+              onClick={() => {
+                togglePublish();
+              }}
+            >
+              {editedPost.published_at === null ? "un published" : "published"}
+            </Button>
+            <Button
+              color="primary"
+              onClick={() => {
+                toggleStatus();
+              }}
+            >
+              {editedPost.status}
+            </Button>
+            <Button
+              color="primary"
+              onClick={() => {
+                removeArticle();
+              }}
+            >
+              Permanent Delete
             </Button>
           </GridContainer>
         </div>
@@ -172,19 +192,21 @@ function ArticlePage({
 }
 
 const mapStateToProps = ({
-  root: { articles: { article, error, isLoading } = [] } = []
+  root: { articles: { article, error, isLoading, isDeleted } = [] } = []
 }) => {
   return {
     article,
     error,
-    isLoading
+    isLoading,
+    isDeleted
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     getArticleDispatch: payload => dispatch(getArticle(payload)),
-    postArticleDispatch: payload => dispatch(postArticle(payload))
+    postArticleDispatch: payload => dispatch(postArticle(payload)),
+    deleteArticleDispatch: payload => dispatch(deleteArticle(payload))
   };
 };
 
